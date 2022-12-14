@@ -1,4 +1,4 @@
-export const CASAS = [
+export const HOUSES = [
     {
         id: "1",
         category: "1",

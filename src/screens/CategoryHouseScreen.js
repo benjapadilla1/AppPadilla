@@ -1,16 +1,24 @@
+import React, { useEffect } from "react";
 import { FlatList } from "react-native";
-import React from "react";
 import HouseItem from "../components/HouseItem";
-import { CASAS } from "../data/casas";
+import { HOUSES } from "../data/houses";
+
+import { useSelector, useDispatch, connect } from "react-redux";
+import { filteredHouse, selectHouse } from "../store/actions/house.action";
+
 
 const CategoryHouseScreen = ({ navigation, route }) => {
-    const casas = CASAS.filter(
-        (casa) => casa.category === route.params.categoryID
-    );
+    const dispatch = useDispatch();
+    const categoryHouses = useSelector((state) => state.houses.filteredHouse)
+    const category = useSelector((state) => state.categories.selected)
+
+    useEffect(() => {
+        dispatch(filteredHouse(category.id))
+    }, [])
 
     const handleSelectedCategory = (item) => {
+        dispatch(selectHouse(item.id))
         navigation.navigate("Details", {
-            productID: item.id,
             name: item.name,
         });
     };
@@ -21,11 +29,11 @@ const CategoryHouseScreen = ({ navigation, route }) => {
 
     return (
         <FlatList
-            data={casas}
+            data={categoryHouses}
             keyExtractor={(item) => item.id}
             renderItem={renderHouseItem}
         />
     );
 };
 
-export default CategoryHouseScreen;
+export default connect()(CategoryHouseScreen);
